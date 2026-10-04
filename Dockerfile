@@ -9,11 +9,13 @@ RUN npm run build
 # Stage 2: Set up PHP 8.4 and Apache runtime
 FROM php:8.4-apache
 
-# Install system dependencies and PHP extensions
+# Install system dependencies and PHP extensions (including libpq-dev for PostgreSQL)
 RUN apt-get update && apt-get install -y \
-    libpng-dev libjpeg-dev libfreetype6-dev libzip-dev zip unzip git \
+    libpng-dev libjpeg-dev libfreetype6-dev libzip-dev zip unzip git libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql zip bcmath
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install gd pdo pdo_mysql pdo_pgsql pgsql zip bcmath \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
