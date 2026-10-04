@@ -23,11 +23,15 @@ class Formation extends Model
         'updated_at'
     ];
 
-    public function formations(): HasMany{
+    public function clients(): HasMany{
         return $this->hasMany(Formation_client::class, 'client_id');
     }
 
-    public function formations_formateurs(): HasMany{
+     public function modules(): HasMany{
+        return $this->hasMany(Module::class);
+    }
+
+    public function formateurs(): HasMany{
         return $this->hasMany(Formation_Formateur::class, 'formation_id');
     }
 }

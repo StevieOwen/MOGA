@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('prenom');
             $table->string('email')->unique();
             $table->string('qualification');
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }
