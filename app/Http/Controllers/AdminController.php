@@ -208,14 +208,20 @@ class AdminController extends Controller
 
 
     public function renderFormateurs(){
-        $formateurs = DB::table('formateurs')->get();
-        return view('admin/formateurs/formateurs_index.php', compact('formateurs'));
+        try {
+            // Charger les formateurs avec leurs formations associées (si la relation existe)
+            $formateurs = Formateur::with('formations')->latest()->get();
+            return view('admin/formateurs/formateurs_index', compact('formateurs'));
+        } catch (Exception $e) {
+            return back()->with('error', 'Erreur lors du chargement des formateurs : ' . $e->getMessage());
+        }
     }
+
     public function createFormateur(){
         return view('admin/formateurs/formateurs_create');
     }
     
-     public function storeFormateur(Request $request){
+    public function storeFormateur(Request $request){
         $request->validate([
             'nom' => 'required|string|max:255',
             'prenom' => 'required|string|max:255',
@@ -244,6 +250,46 @@ class AdminController extends Controller
         } 
         
     }
+
+    public function editFormateur($id){
+        try {
+            $formateur = Formateur::findOrFail($id);
+            return view('admin.formateurs.edit', compact('formateur'));
+        } catch (Exception $e) {
+            return redirect()->route('formateurs.index')->with('error', 'Formateur introuvable : ' . $e->getMessage());
+        }
+    }
+
+    public function updateFormateur(Request $request, $id){
+        $validated = $request->validate([
+            'nom'           => 'required|string|max:255',
+            'prenom'        => 'required|string|max:255',
+            'email'         => 'required|email|unique:formateurs,email,' . $id . '|max:255',
+            'qualification' => 'required|string|max:255',
+        ]);
+
+        try {
+            $formateur = Formateur::findOrFail($id);
+            $formateur->update($validated);
+
+            return redirect()->route('formateurs.index')->with('success', 'Formateur mis à jour avec succès.');
+        } catch (Exception $e) {
+            return back()->withInput()->with('error', 'Erreur lors de la modification : ' . $e->getMessage());
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $formateur = Formateur::findOrFail($id);
+            $formateur->delete();
+
+            return redirect()->route('formateurs.index')->with('success', 'Formateur supprimé avec succès.');
+        } catch (Exception $e) {
+            return back()->with('error', 'Erreur lors de la suppression : ' . $e->getMessage());
+        }
+    }
+
 
     public function renderModules(){
         $formations=DB::table('formations')->get();
