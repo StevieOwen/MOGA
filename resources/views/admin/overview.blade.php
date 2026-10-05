@@ -161,7 +161,7 @@
     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
 
         <a
-            href=""
+            href="{{route('formations.create')}}"
             class="group flex items-center gap-4 rounded-xl border border-gray-200 p-4 transition hover:border-[#26295C]/30 hover:bg-[#26295C]/5"
         >
             <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#26295C]/10 text-[#26295C] transition group-hover:bg-[#26295C] group-hover:text-white">
@@ -180,7 +180,7 @@
 
 
         <a
-            href=""
+            href="{{route('formateurs.create')}}"
             class="group flex items-center gap-4 rounded-xl border border-gray-200 p-4 transition hover:border-emerald-200 hover:bg-emerald-50"
         >
             <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 transition group-hover:bg-emerald-600 group-hover:text-white">
@@ -199,7 +199,7 @@
 
 
         <a
-            href=""
+            href="{{route('annonces.create')}}"
             class="group flex items-center gap-4 rounded-xl border border-gray-200 p-4 transition hover:border-[#8C4B31]/30 hover:bg-[#8C4B31]/5"
         >
             <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#8C4B31]/10 text-[#8C4B31] transition group-hover:bg-[#8C4B31] group-hover:text-white">
@@ -218,7 +218,7 @@
 
 
         <a
-            href=""
+            href="{{route('inscriptions.index')}}"
             class="group flex items-center gap-4 rounded-xl border border-gray-200 p-4 transition hover:border-blue-200 hover:bg-blue-50"
         >
             <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition group-hover:bg-blue-600 group-hover:text-white">

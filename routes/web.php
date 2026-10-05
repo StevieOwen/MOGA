@@ -16,8 +16,15 @@ Route::controller(AdminController::class)->group(function(){
     Route::post('/modules/store','storeModule')->name('modules.store');
     
     Route::get('/inscriptions','renderInscriptions')->name('inscriptions.index');
+    Route::delete('/inscriptions/destroy/{id}','destroyInscription')->name('inscriptions.destroy');
+
     Route::get('/settings','renderSettings')->name('settings');
     Route::get('/annonces','renderAnnonces')->name('annonces.index');
+    Route::get('/annonces/create','createAnnonces')->name('annonces.create');
+    Route::post('/annonces','storeAnnonces')->name('annonces.store');
+    // Route::get('/annonces/edit/{id}','editAnnonces')->name('annonces.edit');
+    Route::put('/annonces/{id}','updateAnnonces')->name('annonces.update');
+    Route::delete('/annonces/destroy/{id}','destroyAnnonces')->name('annonces.destroy');
 
     Route::get('/formations','renderFormations')->name('formations.index');
     Route::post('/formations/store','storeFormation')->name('formations.store');
@@ -32,6 +39,10 @@ Route::controller(AdminController::class)->group(function(){
     Route::get('/formateurs/edit/{id}','editFormateur')->name('formateurs.edit');
     Route::put('/formateurs/{id}','updateFormateur')->name('formateurs.update');
     Route::delete('/formateurs/destroy/{id}','destroyFormateur')->name('formateurs.destroy');
+
+    Route::get('/parametres','renderSettings')->name('settings.index');
+    Route::put('/parametres/profil', 'updateProfile')->name('settings.updateProfile');
+
 });
 });
 
@@ -39,6 +50,4 @@ Route::controller(AdminController::class)->group(function(){
 Route::controller(CustomerController::class)->group(function(){
     Route::get('/customer/formations','showFormation')->name('customer.formations.index');
     Route::get('/customer/annonces','showAnnonces')->name('customer.annonces.index');
-
-
 });

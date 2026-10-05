@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Exception;
 
 class AdminController extends Controller
@@ -344,16 +346,150 @@ class AdminController extends Controller
         
     }
 
-   
+    public function renderInscriptions()
+    {
+        $inscriptions = DB::table('formation_clients')
+            ->join('clients', 'formation_clients.client_id', '=', 'clients.id')
+            ->join('formations', 'formation_clients.formation_id', '=', 'formations.id')
+            ->select(
+                'formation_clients.id as inscription_id',
+                'formation_clients.created_at as date_inscription',
+                'clients.id as client_id',
+                'clients.nom',
+                'clients.prenom',
+                'clients.email',
+                'clients.telephone',
+                'formations.intitule as formation_intitule'
+            )
+            ->orderBy('formation_clients.created_at', 'desc')
+            ->get();
 
-    public function renderInscriptions(){
-        $inscriptions = DB::table('inscriptions')->get();
-        return view('admin/inscriptions', compact('inscriptions'));
+        return view('admin/inscriptions/inscriptions', compact('inscriptions'));
     }
+
+    public function destroyInscription($id)
+    {
+        DB::table('formation_clients')->where('id', $id)->delete();
+
+        return redirect()->back()->with('success', 'L\'inscription de l\'élève a été retirée avec succès.');
+    }
+
 
     public function renderAnnonces(){
-        return view('admin/annonces');
+        $annonces=Annonce::latest()->get();
+        return view('admin/annonces/index', compact('annonces'));
     }
+
+    public function createAnnonces(){
+        return view("admin/annonces/create");
+    }
+
+    public function storeAnnonce(Request $request)
+    {
+        $request->validate([
+            'titre' => 'required|string|max:255',
+            'categorie' => 'required|string|max:100',
+            'description' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ], [
+            'titre.required' => 'Le titre est obligatoire.',
+            'categorie.required' => 'La catégorie est obligatoire.',
+            'description.required' => 'La description est obligatoire.',
+            'image.image' => 'Le fichier doit être une image.',
+            'image.max' => 'L\'image ne doit pas dépasser 2 Mo.',
+        ]);
+
+        $data = [
+            'titre' => $request->titre,
+            'categorie' => $request->categorie,
+            'description' => $request->description,
+        ];
+
+        // Traitement et sauvegarde de l'image si elle est présente
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('annonces', 'public');
+            $data['image'] = $path;
+        }
+
+        Annonces::create($data);
+
+        return redirect()->route('annonces.index')->with('success', 'Annonce créée avec succès.');
+    }
+
+    public function updateAnnonce(Request $request, $id)
+    {
+        $request->validate([
+            'titre' => 'required|string|max:255',
+            'description' => 'required|string',
+            'categorie' => 'required|string|max:100',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+        ]);
+
+        $annonce = Annonce::findOrFail($id);
+        
+        $data = [
+            'titre' => $request->titre,
+            'description' => $request->description,
+            'categorie' => $request->categorie,
+        ];
+
+        // Traitement de l'image si une nouvelle image est téléchargée
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('annonces', 'public');
+            $data['image'] = $path;
+        }
+
+        $annonce->update($data);
+        return redirect()->back()->with('success', 'Annonce mise à jour avec succès.');
+    }
+
+    public function destroyAnnonce($id)
+    {
+        $annonce = Annonce::findOrFail($id);
+        $annonce->delete();
+        return redirect()->back()->with('success', 'Annonce supprimée avec succès.');
+    }
+
+    public function renderSettings()
+    {
+        $admin = Auth::user(); // Récupère l'administrateur connecté
+        
+        return view('admin.settings', compact('admin'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $admin = Auth::user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $admin->id,
+            'current_password' => 'nullable|required_with:new_password',
+            'new_password' => 'nullable|min:8|confirmed',
+        ], [
+            'name.required' => 'Le nom est obligatoire.',
+            'email.required' => 'L\'adresse email est obligatoire.',
+            'email.unique' => 'Cet email est déjà utilisé.',
+            'new_password.min' => 'Le nouveau mot de passe doit contenir au moins 8 caractères.',
+            'new_password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
+        ]);
+
+        // Vérification de l'ancien mot de passe si changement demandé
+        if ($request->filled('new_password')) {
+            if (!Hash::check($request->current_password, $admin->password)) {
+                return back()->withErrors(['current_password' => 'Le mot de passe actuel est incorrect.']);
+            }
+            $admin->password = Hash::make($request->new_password);
+        }
+
+        $admin->name = $request->name;
+        $admin->email = $request->email;
+        $admin->save();
+
+        return redirect()->back()->with('success', 'Profil mis à jour avec succès.');
+    }
+
+    
 
 
 }
