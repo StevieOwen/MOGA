@@ -24,8 +24,8 @@ class Formation extends Model
         'updated_at'
     ];
 
-    public function clients(): HasMany{
-        return $this->hasMany(Formation_client::class, 'client_id');
+    public function clients(): BelongsToMany{
+        return $this->belongsToMany(Client::class, 'formation_clients', 'formation_id', 'client_id');
     }
 
      public function modules(): HasMany{

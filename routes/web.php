@@ -30,8 +30,8 @@ Route::controller(AdminController::class)->group(function(){
     Route::get('/formateurs/create','createFormateur')->name('formateurs.create');
     Route::post('/formateurs','storeFormateur')->name('formateurs.store');
     Route::get('/formateurs/edit/{id}','editFormateur')->name('formateurs.edit');
-    Route::put('/formateurs/edit/{id}','updateFormateur')->name('formateurs.update');
-    Route::delete('/formateurs/{id}','destroyFormateur')->name('formateurs.destroy');
+    Route::put('/formateurs/{id}','updateFormateur')->name('formateurs.update');
+    Route::delete('/formateurs/destroy/{id}','destroyFormateur')->name('formateurs.destroy');
 });
 });
 

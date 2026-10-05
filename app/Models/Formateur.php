@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Formateur extends Model
 {
@@ -19,7 +20,7 @@ class Formateur extends Model
             'created_at',
             'updated_at'
         ];
-    public function formations(): HasMany{
-        return $this->hasMany(Formation_Formateur::class, 'formation_id');
+    public function formations(): BelongsToMany{
+        return $this->belongsToMany(Formation::class,'formation__formateurs','formateur_id','formation_id');
     }
 }
