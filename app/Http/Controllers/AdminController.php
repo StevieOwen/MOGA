@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use App\Models\Formation;
 use App\Models\Client;
 use App\Models\Formateur;
+use App\Models\Module;
 use App\Models\Annonce;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Exception;
 
@@ -135,35 +137,41 @@ class AdminController extends Controller
     public function editFormation($id){
         try {
             $formation = Formation::with(['formateurs', 'modules'])->findOrFail($id); 
-            $formateurs = Formateur::all(); //[cite: 20]
-            $modules = Module::all(); //[cite: 17]
+            $formateurs = Formateur::get(); 
+            $modules = Module::get(); 
             return view('admin.formations.edit', compact('formation', 'formateurs', 'modules'));
         } catch (Exception $e) {
             return redirect()->route('formations.index')->with('error', 'Formation introuvable ou erreur : ' . $e->getMessage());
         }
     }
 
-    public function updateFormation(Request $request, $id){
+    public function updateFormation(Request $request, $id)
+    {
+        // 1. Validation des champs transmis par le formulaire
         $validated = $request->validate([
             'intitule'     => 'required|string|max:255',
             'image'        => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'categorie'    => 'nullable|string|max:255',
-            'prix'         => 'required|integer|min:0',
-            'duree'        => 'required|integer|min:1',
+            'prix'         => 'required|numeric|min:0',
             'disponible'   => 'required|in:oui,non',
             'date_debut'   => 'required|date',
             'date_fin'     => 'required|date|after_or_equal:date_debut',
             'formateurs'   => 'nullable|array',
             'formateurs.*' => 'exists:formateurs,id',
             'modules'      => 'nullable|array',
-            'modules.*'    => 'exists:modules,id',
+            'modules.*'    => 'nullable|string|max:255',
         ]);
 
         DB::beginTransaction();
         try {
             $formation = Formation::findOrFail($id);
 
-            // Mise à jour de l'image
+            // 2. Calcul automatique de la durée (en jours)
+            $debut = Carbon::parse($validated['date_debut']);
+            $fin = Carbon::parse($validated['date_fin']);
+            $validated['duree'] = $debut->diffInDays($fin);
+
+            // 3. Gestion de l'image
             if ($request->hasFile('image')) {
                 if ($formation->image && Storage::disk('public')->exists($formation->image)) {
                     Storage::disk('public')->delete($formation->image);
@@ -171,24 +179,36 @@ class AdminController extends Controller
                 $validated['image'] = $request->file('image')->store('formations', 'public');
             }
 
+            // 4. Mise à jour des informations
             $formation->update($validated);
 
-            // Synchronisation des formateurs et des modules
-            $formation->formateurs()->sync($request->input('formateurs', [])); 
+            // 5. Synchronisation des formateurs dans la table pivot
+            $formation->formateurs()->sync($request->input('formateurs', []));
 
-            // Réinitialiser les modules liés et assigner les nouveaux
-            Module::where('formation_id', $formation->id)->update(['formation_id' => null]);
+            // 6. Mise à jour des modules
+            $formation->modules()->delete();
+
             if ($request->has('modules')) {
-                Module::whereIn('id', $request->modules)->update(['formation_id' => $formation->id]); 
+                $modulesToInsert = array_filter(array_map('trim', $request->modules));
+
+                if (!empty($modulesToInsert)) {
+                    $formattedModules = array_map(function ($nom) {
+                        return ['nom' => $nom];
+                    }, $modulesToInsert);
+
+                    $formation->modules()->createMany($formattedModules);
+                }
             }
 
             DB::commit();
             return redirect()->route('formations.index')->with('success', 'Formation mise à jour avec succès.');
-        } catch (Exception $e) {
+
+        } catch (\Exception $e) {
             DB::rollBack();
+            // Redirection avec le message d'erreur d'exception
             return back()->withInput()->with('error', 'Erreur lors de la modification : ' . $e->getMessage());
         }
-    } 
+    }
 
     public function destroyFormation($id)
     {
@@ -278,7 +298,7 @@ class AdminController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroyFormateur($id)
     {
         try {
             $formateur = Formateur::findOrFail($id);

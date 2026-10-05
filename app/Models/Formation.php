@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Formation extends Model
 {
@@ -31,7 +32,7 @@ class Formation extends Model
         return $this->hasMany(Module::class);
     }
 
-    public function formateurs(): HasMany{
-        return $this->hasMany(Formation_Formateur::class, 'formation_id');
+    public function formateurs(): BelongsToMany{
+        return $this->belongsToMany(Formateur::class, 'formation__formateurs', 'formation_id', 'formateur_id');
     }
 }
