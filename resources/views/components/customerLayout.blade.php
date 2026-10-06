@@ -26,6 +26,7 @@
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     >
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body class="bg-slate-50 text-slate-900 antialiased">
@@ -59,21 +60,21 @@
                 <!-- Navigation Desktop -->
                 <nav class="hidden items-center gap-7 lg:flex">
                     <a
-                        href="#accueil"
+                        href="{{route('/')}}"
                         class="text-sm font-semibold text-[#26295C] transition hover:text-[#8C4B31]"
                     >
                         Accueil
                     </a>
 
                     <a
-                        href="{{ route('formations.index') }}"
+                        href="{{ route('customer.formations.index') }}"
                         class="text-sm font-semibold text-slate-600 transition hover:text-[#8C4B31]"
                     >
                         Catalogue des formations
                     </a>
 
                     <a
-                        href="{{ route('annonces.index') }}"
+                        href="{{ route('customer.annonces.index') }}"
                         class="text-sm font-semibold text-slate-600 transition hover:text-[#8C4B31]"
                     >
                         Annonces

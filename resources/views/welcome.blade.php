@@ -65,7 +65,7 @@
                         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
 
                             <a
-                                href="{{ route('formations.index') }}"
+                                href="{{ route('customer.formations.index') }}"
                                 class="inline-flex items-center justify-center gap-2 rounded-lg bg-[#26295C] px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#26295C]/10 transition hover:bg-[#1d2049]"
                             >
                                 Découvrir nos formations
@@ -149,49 +149,60 @@
                                 </div>
 
                                 <!-- Construction illustration -->
-                                <div class="relative h-72 overflow-hidden rounded-2xl bg-white/80 p-5">
+                                <!-- Illustration Génie Civil SVG -->
+                                <div class="relative flex h-72 items-center justify-center overflow-hidden rounded-2xl bg-white/90 p-4">
 
-                                    <!-- Sol -->
-                                    <div class="absolute bottom-8 left-5 right-5 h-1 bg-[#26295C]/20"></div>
+                                    <svg class="h-full w-full max-w-md text-[#26295C]" viewBox="0 0 500 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <!-- Ligne de sol / Fondations -->
+                                        <path d="M20 260 H480" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
+                                        <path d="M20 270 H480" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="6 6" />
 
-                                    <!-- Tour -->
-                                    <div class="absolute bottom-9 left-1/2 -translate-x-1/2">
+                                        <!-- Structure de Pont à Haubans (Civil Engineering Icon) -->
+                                        <!-- Pylône Central -->
+                                        <path d="M250 50 L235 260 H265 L250 50 Z" fill="currentColor" />
+                                        <path d="M250 30 L250 50" stroke="#8C4B31" stroke-width="4" />
+                                        
+                                        <!-- Câbles / Haubans (Gauche) -->
+                                        <line x1="250" y1="80" x2="80" y2="260" stroke="#8C4B31" stroke-width="2" opacity="0.8" />
+                                        <line x1="250" y1="110" x2="120" y2="260" stroke="#8C4B31" stroke-width="2" opacity="0.8" />
+                                        <line x1="250" y1="140" x2="160" y2="260" stroke="#8C4B31" stroke-width="2" opacity="0.8" />
+                                        <line x1="250" y1="170" x2="200" y2="260" stroke="#8C4B31" stroke-width="2" opacity="0.8" />
 
-                                        <!-- Tour principale -->
-                                        <div class="relative flex h-48 w-32 items-end justify-center border-x-4 border-[#26295C]">
+                                        <!-- Câbles / Haubans (Droite) -->
+                                        <line x1="250" y1="80" x2="420" y2="260" stroke="#8C4B31" stroke-width="2" opacity="0.8" />
+                                        <line x1="250" y1="110" x2="380" y2="260" stroke="#8C4B31" stroke-width="2" opacity="0.8" />
+                                        <line x1="250" y1="140" x2="340" y2="260" stroke="#8C4B31" stroke-width="2" opacity="0.8" />
+                                        <line x1="250" y1="170" x2="300" y2="260" stroke="#8C4B31" stroke-width="2" opacity="0.8" />
 
-                                            <!-- Barres horizontales -->
-                                            <div class="absolute left-0 right-0 top-8 h-1 bg-[#8C4B31]"></div>
-                                            <div class="absolute left-0 right-0 top-20 h-1 bg-[#8C4B31]"></div>
-                                            <div class="absolute left-0 right-0 top-32 h-1 bg-[#8C4B31]"></div>
-                                            <div class="absolute left-0 right-0 top-44 h-1 bg-[#8C4B31]"></div>
+                                        <!-- Tablier du Pont -->
+                                        <rect x="50" y="245" width="400" height="15" rx="3" fill="#8C4B31" />
 
-                                            <!-- Diagonales -->
-                                            <div class="absolute inset-0">
-                                                <div class="absolute left-2 top-2 h-52 w-1 rotate-[35deg] bg-[#26295C]/60 origin-top"></div>
-                                                <div class="absolute right-2 top-2 h-52 w-1 -rotate-[35deg] bg-[#26295C]/60 origin-top"></div>
-                                            </div>
+                                        <!-- Silhouette Grue de Construction en arrière-plan -->
+                                        <g stroke="currentColor" stroke-width="2" opacity="0.35">
+                                            <!-- Mât -->
+                                            <line x1="390" y1="245" x2="390" y2="90" />
+                                            <line x1="398" y1="245" x2="398" y2="90" />
+                                            <!-- Flèche & Contre-flèche -->
+                                            <line x1="330" y1="100" x2="460" y2="100" />
+                                            <line x1="394" y1="75" x2="330" y2="100" />
+                                            <line x1="394" y1="75" x2="430" y2="100" />
+                                            <!-- Câble de levage -->
+                                            <line x1="440" y1="100" x2="440" y2="170" stroke="#8C4B31" stroke-width="2" />
+                                            <rect x="433" y="170" width="14" height="14" fill="#8C4B31" />
+                                        </g>
+                                    </svg>
 
-                                            <!-- Sommet -->
-                                            <div class="absolute -top-10 left-1/2 h-10 w-1 -translate-x-1/2 bg-[#26295C]"></div>
-
-                                            <div class="absolute -top-14 left-1/2 h-5 w-12 -translate-x-1/2 border-2 border-[#26295C]"></div>
-                                        </div>
+                                    <!-- Badges Flottants FontAwesome -->
+                                    <div class="absolute left-4 top-4 flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm">
+                                        <i class="fa-solid fa-bridge-water text-lg text-[#8C4B31]"></i>
                                     </div>
 
-                                    <!-- Icône niveau -->
-                                    <div class="absolute left-6 top-10 flex h-14 w-14 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm">
-                                        <i class="fa-solid fa-ruler-combined text-xl text-[#8C4B31]"></i>
+                                    <div class="absolute right-4 top-4 flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm">
+                                        <i class="fa-solid fa-[#26295C] fa-compass-drafting text-lg text-[#26295C]"></i>
                                     </div>
 
-                                    <!-- Icône compas -->
-                                    <div class="absolute right-6 top-14 flex h-14 w-14 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm">
-                                        <i class="fa-solid fa-compass-drafting text-xl text-[#26295C]"></i>
-                                    </div>
-
-                                    <!-- Icône structure -->
-                                    <div class="absolute bottom-7 right-7 flex h-12 w-12 items-center justify-center rounded-xl bg-[#8C4B31]/10 text-[#8C4B31]">
-                                        <i class="fa-solid fa-cubes-stacked"></i>
+                                    <div class="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-xl bg-[#8C4B31]/10 text-[#8C4B31]">
+                                        <i class="fa-solid fa-trowel-bricks"></i>
                                     </div>
 
                                 </div>

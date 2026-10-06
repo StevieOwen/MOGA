@@ -6,7 +6,7 @@ use App\Http\Controllers\CustomerController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('/');
 
 Route::middleware('auth')->group(function() {
 Route::controller(AdminController::class)->group(function(){
@@ -18,7 +18,7 @@ Route::controller(AdminController::class)->group(function(){
     Route::get('/inscriptions','renderInscriptions')->name('inscriptions.index');
     Route::delete('/inscriptions/destroy/{id}','destroyInscription')->name('inscriptions.destroy');
 
-    Route::get('/settings','renderSettings')->name('settings');
+    
     Route::get('/annonces','renderAnnonces')->name('annonces.index');
     Route::get('/annonces/create','createAnnonces')->name('annonces.create');
     Route::post('/annonces','storeAnnonces')->name('annonces.store');
@@ -49,5 +49,8 @@ Route::controller(AdminController::class)->group(function(){
 
 Route::controller(CustomerController::class)->group(function(){
     Route::get('/customer/formations','showFormation')->name('customer.formations.index');
+    Route::get('/customer/inscriptions','createInscriptions')->name('customer.inscriptions');
+    Route::post('/customer/{id}/inscription','storeInscription')->name('trainee.formations.sinscrire');
+
     Route::get('/customer/annonces','showAnnonces')->name('customer.annonces.index');
 });

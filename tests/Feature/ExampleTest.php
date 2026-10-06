@@ -1,7 +1,11 @@
 <?php
+use RefreshDatabase;
 
 test('the application returns a successful response', function () {
-    $response = $this->get('/');
+    $response = $this->post(route('login'),[
+        'email' => 'centre.moga@gmail.com',
+        'password' => 'Mog@Admin$123#',
+    ]);
 
-    $response->assertStatus(200);
+    $response->assertOk();
 });

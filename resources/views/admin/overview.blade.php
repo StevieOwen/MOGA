@@ -16,7 +16,7 @@
         </div>
 
         <h1 class="text-2xl font-extrabold tracking-tight text-[#26295C] sm:text-3xl">
-            Bonjour, Administrateur 👋
+            Bonjour, {{ auth()->user()->name }} 👋
         </h1>
 
         <p class="mt-1 text-sm text-gray-500">

@@ -260,10 +260,10 @@
                             @endif
 
 
-                            @if (Route::has('admin.settings'))
+                            @if (Route::has('settings.index'))
 
                                 <a
-                                    href="{{ route('admin.settings') }}"
+                                    href="{{ route('settings.index') }}"
                                     class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-[#26295C]"
                                 >
                                     <i class="fa-solid fa-gear w-5 text-center text-slate-400"></i>
@@ -591,7 +591,7 @@
                     PARAMÈTRES
                     ========================================================== --}}
                 <a
-                    href="{{ route('settings') }}"
+                    href="{{ route('settings.index') }}"
                     class="group flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition
                     {{ request()->routeIs('settings*')
                         ? 'bg-white text-[#26295C] shadow-sm'
